@@ -1,0 +1,4 @@
+#!/bin/bash
+[ -n "src/p${1}.c" ] || exit 1
+
+cp src/tempc.c src/p${1}.c
