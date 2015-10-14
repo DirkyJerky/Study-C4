@@ -67,27 +67,7 @@ int nButtons = sizeof (buttonList) /
 GtkWidget *label;
 
 
-/*
- * CloseAppWindow
- *
- * The window is closing down, end the gtk loop
-*/
-gint CloseAppWindow (GtkWidget *widget, gpointer data)
-{
-    gtk_main_quit ();
-
-    return (FALSE);
-}
-
-
-/*
- * TrimTrailingZeros
- *
- * Get rid of trailing zeros 
- * Takes the string and removes the trailing zeros.
-*/
-void TrimTrailingZeros (char *szDigits)
-{
+void trimTrailingZeros (char *szDigits) {
     int nIndex;
     int bDecimal = FALSE;
     int nPos = -1;
@@ -127,15 +107,7 @@ void TrimTrailingZeros (char *szDigits)
 }
 
 
-/*
- * TrimLeadingZeros
- *
- * Trim the leading zeros.
- * 
- * Converts numbers like "0000012" to "12"
-*/
-void TrimLeadingZeros (char *szDigits)
-{
+void trimLeadingZeros (char *szDigits) {
     int nPos;
 
     if (szDigits == NULL) return;
@@ -153,13 +125,7 @@ void TrimLeadingZeros (char *szDigits)
 }
 
 
-/*
- * Command
- *
- * Returns true if the character is a two digit command.
-*/
-int Command (char ch)
-{
+int command (char ch) {
     switch (ch) {
         case '+':
         case '-':
@@ -171,33 +137,12 @@ int Command (char ch)
     return (FALSE);
 }
 
-/*
- * FloatingPointChar
- *
- * Returns true if the character is any of [0123456789.]
-*/
-int FloatingPointChar (char ch)
-{
-
+int floatingPointChar (char ch) {
     return (isdigit (ch) || ch == '.');
 }
 
-
-/*
- * key_press
- *
- * Handle the button "key_press" event.
- *
- * Function looks for the keystroke in the calculator 
- * data structure and (if a match is found) presses the 
- * button that matches the keystroke for the user.  It
- * keeps our code small since we only have to handle the
- * button_clicked events.
-*/
-void key_press (GtkWidget *widget, 
-                GdkEventKey *event, 
-                gpointer data)
-{
+// Pass on to button click event
+void key_press (GtkWidget *widget, GdkEventKey *event, gpointer data) {
     int nIndex;
 
     /* --- Search through the buttons --- */
@@ -219,20 +164,13 @@ void key_press (GtkWidget *widget,
 }
 
 
-/*
- * HandleDigit
- *
- * Digit button was pressed, deal with it.  How it
- * is dealt with depends on the situation.
-*/
-void HandleDigit (char *str, char ch)
-{
+void handleDigit (char *str, char ch) {
     const char *labelText;
     char buffer[BUF_SIZE];
     int  len;
 
     /* --- And they just did a command --- */
-    if (Command (lastChar)) {
+    if (command (lastChar)) {
 
         /* --- Clear the digit field --- */
         gtk_label_set_text (GTK_LABEL (label), "");
@@ -256,55 +194,44 @@ void HandleDigit (char *str, char ch)
     buffer[len+1] = (gchar) 0;
    
     /* --- Trim leading zeros. --- */
-    TrimLeadingZeros (buffer);
+    trimLeadingZeros (buffer);
 
     /* --- Add digit to field. --- */
     gtk_label_set_text (GTK_LABEL (label), (char *) buffer);
 }
 
-
-/*
- * MaybeUnary
- *
- * str
- * 
- * Check to see if the user hit a unary operator button - 
- * like %, sqrt, 1/x, etc that should be dealt with NOW
- * not later.
-*/
-void MaybeUnaryOperation (char *str)
-{
+// Do now not later?
+void maybeUnaryOperation (char *str) {
     const char *labelText;
     char buffer[BUF_SIZE];
     float num2;
 
-    /* --- Get number in the field. --- */
+    // --- Get number in the field. 
     labelText = gtk_label_get_text (GTK_LABEL (label));
     num2 = atof (labelText);
 
-    /* --- Percentage? --- */
+    // --- Percentage?
     if (strcmp (str, "%") == 0) {
         num2 = num2 / 100;
 
-    /* --- Trying for 1/x? --- */
+    // --- Trying for 1/x?
     } else if (strcmp (str, "1/x") == 0) {
 
-        /* --- Can't divide by zero. --- */
+        // --- Can't divide by zero.
         if (num2 == 0) {
-            /*Error (); */
             return;
         }
         num2 = 1 / num2;
 
-    /* --- Calculate sqrt --- */
+    // --- Calculate sqrt
     } else if (strcmp (str, "sqrt") == 0) {
         num2 = sqrt ((double) num2);
 
-    /* --- Calculate square --- */
+    // --- Calculate square
     } else if (strcmp (str, "x^2") == 0) {
         num2 = num2 * num2;
 
-        // Calculate Negation
+    // --- Calculate Negation
     } else if (strcmp (str, "+/-") == 0) {
         num2 = 0 - num2;
         prevCmd = (char) 0;
@@ -313,14 +240,13 @@ void MaybeUnaryOperation (char *str)
 
     /* --- Put the number back. --- */
     sprintf (buffer, "%f", (float) num2);
-    TrimTrailingZeros (buffer);
-    TrimLeadingZeros (buffer);
+    trimTrailingZeros (buffer);
+    trimLeadingZeros (buffer);
     gtk_label_set_text (GTK_LABEL (label), buffer);
 }
 
 
-void HandleBinaryOperation ()
-{
+void handleBinaryOperation () {
     char buffer[BUF_SIZE];
     const char *labelText;
     float num2;
@@ -358,8 +284,8 @@ void HandleBinaryOperation ()
 
     /* --- Put the number back. --- */
     sprintf (buffer, "%f", (float) num1);
-    TrimTrailingZeros (buffer);
-    TrimLeadingZeros (buffer);
+    trimTrailingZeros (buffer);
+    trimLeadingZeros (buffer);
     gtk_label_set_text (GTK_LABEL (label), buffer);
 }
 
@@ -372,8 +298,7 @@ void HandleBinaryOperation ()
  *
  * Button was pressed, handle it.
 */
-void button_clicked (GtkWidget *widget, gpointer data)
-{
+void button_clicked (GtkWidget *widget, gpointer data) {
     char ch = *((char *) data);
     char *str;
     
@@ -381,9 +306,9 @@ void button_clicked (GtkWidget *widget, gpointer data)
     str = (char *) data;
 
     /* --- Entering a number... --- */
-    if (FloatingPointChar (ch) && strlen (str) == 1) {
+    if (floatingPointChar (ch) && strlen (str) == 1) {
 
-        HandleDigit (str, ch);
+        handleDigit (str, ch);
 
     } else {
 
@@ -402,11 +327,11 @@ void button_clicked (GtkWidget *widget, gpointer data)
         } else {
 
             /* --- Maybe it's a unary operator? --- */
-            MaybeUnaryOperation (str);
+            maybeUnaryOperation (str);
         }
 
         /* --- See if there's a binary operation to do --- */
-        HandleBinaryOperation ();
+        handleBinaryOperation ();
 
         prevCmd = ch;
     }
@@ -419,8 +344,7 @@ void button_clicked (GtkWidget *widget, gpointer data)
  * Create a button, assign event handlers, and attach the button to the
  * table in the proper place.
 */
-GtkWidget *CreateButton (GtkWidget *table, char *szLabel, int row, int column)
-{
+GtkWidget *createButton (GtkWidget *table, char *szLabel, int row, int column) {
     GtkWidget *button;
 
     /* --- Create the button --- */
@@ -451,8 +375,7 @@ GtkWidget *CreateButton (GtkWidget *table, char *szLabel, int row, int column)
  * beginning of this program.  The button pointers (handles) are stored
  * back in the table so they can be referenced later.
 */
-void CreateCalculatorButtons (GtkWidget *table)
-{
+void createCalculatorButtons (GtkWidget *table) {
     int nIndex;
 
     /* --- Run through the list of buttons. --- */
@@ -460,7 +383,7 @@ void CreateCalculatorButtons (GtkWidget *table)
 
         /* --- Create a button --- */
         buttonList[nIndex].widget = 
-                CreateButton (table, 
+                createButton (table, 
                               buttonList[nIndex].szLabel, 
                               buttonList[nIndex].row, 
                               buttonList[nIndex].col);
@@ -504,7 +427,7 @@ int main (int argc, char *argv[])
     gtk_grid_set_row_homogeneous(GTK_GRID (table), TRUE);
 
     /* --- Create the calculator buttons. --- */
-    CreateCalculatorButtons (table);
+    createCalculatorButtons (table);
 
     /* --- Create the calculator LED --- */
     label = gtk_label_new ("0");
