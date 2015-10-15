@@ -10,23 +10,16 @@ static char lastChar = (char) 0;
 static char prevCmd = (char) 0;
 #define BUF_SIZE 88
 
-/*
- * --- data structure to keep track of the calculator buttons.
-*/
 typedef struct {
 
-    char      *szLabel;    /* --- Label display on button --- */
-    int       row;         /* --- Row to place the button --- */
-    int       col;         /* --- Column to place the button --- */
-    GtkWidget *widget;     /* --- Handle to the button --- */
+    char      *szLabel;    // Label display on button
+    int       row;         // Row to place the button
+    int       col;         // Column to place the button
+    GtkWidget *widget;     // Handle to the button
 
 } typCalculatorButton;
 
 
-/* 
- * --- This is the button list.  Each button is documented here so 
- *     we can access it.
-*/
 typCalculatorButton buttonList [] = {
     {"C",   1, 0, NULL},      /* --- Clear --- */
     {"CE",  1, 1, NULL},      /* --- Clear --- */
@@ -57,30 +50,24 @@ typCalculatorButton buttonList [] = {
     {"x^2", 5, 4, NULL},      /* --- Squared --- */
 };
 
-/*
- * --- Number of buttons in the data structure.  
-*/
-int nButtons = sizeof (buttonList) / 
-               sizeof (typCalculatorButton);
+int nButtons = sizeof (buttonList) / sizeof (typCalculatorButton);
 
-/* --- This is the LCD panel - the results --- */
+// Results panel
 GtkWidget *label;
-
 
 void trimTrailingZeros (char *szDigits) {
     int nIndex;
     int bDecimal = FALSE;
     int nPos = -1;
 
-    /* --- Loop through the string. --- */
+    // Foreach char in string
     for (nIndex = 0; nIndex < strlen (szDigits); nIndex++) {
 
-        /* --- Is this a decimal? --- */
         if (szDigits[nIndex] == '.') {
              bDecimal = TRUE;
         }
 
-        /* --- If we're on the right side of the decimal... --- */
+        // If right of decimal point
         if (bDecimal) {
 
             /* --- A zero?  Hmm... from this point on? --- */
