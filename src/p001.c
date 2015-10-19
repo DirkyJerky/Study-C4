@@ -10,15 +10,15 @@ static char lastChar = (char) 0;
 static char prevCmd = (char) 0;
 #define BUF_SIZE 88
 
-typedef struct {
+// Results panel
+GtkWidget *label;
 
+typedef struct {
     char      *szLabel;    // Label display on button
     int       row;         // Row to place the button
     int       col;         // Column to place the button
     GtkWidget *widget;     // Handle to the button
-
 } typCalculatorButton;
-
 
 typCalculatorButton buttonList [] = {
     {"C",   1, 0, NULL},      /* --- Clear --- */
@@ -52,8 +52,6 @@ typCalculatorButton buttonList [] = {
 
 int nButtons = sizeof (buttonList) / sizeof (typCalculatorButton);
 
-// Results panel
-GtkWidget *label;
 
 void trimTrailingZeros (char *szDigits) {
     int nIndex;
@@ -93,7 +91,6 @@ void trimTrailingZeros (char *szDigits) {
     }
 }
 
-
 void trimLeadingZeros (char *szDigits) {
     int nPos;
 
@@ -111,7 +108,6 @@ void trimLeadingZeros (char *szDigits) {
     }
 }
 
-
 int command (char ch) {
     switch (ch) {
         case '+':
@@ -128,7 +124,6 @@ int floatingPointChar (char ch) {
     return (isdigit (ch) || ch == '.');
 }
 
-// Pass on to button click event
 void key_press (GtkWidget *widget, GdkEventKey *event, gpointer data) {
     int nIndex;
 
@@ -149,7 +144,6 @@ void key_press (GtkWidget *widget, GdkEventKey *event, gpointer data) {
         }
     }
 }
-
 
 void handleDigit (char *str, char ch) {
     const char *labelText;
@@ -187,7 +181,6 @@ void handleDigit (char *str, char ch) {
     gtk_label_set_text (GTK_LABEL (label), (char *) buffer);
 }
 
-// Do now not later?
 void maybeUnaryOperation (char *str) {
     const char *labelText;
     char buffer[BUF_SIZE];
@@ -232,7 +225,6 @@ void maybeUnaryOperation (char *str) {
     gtk_label_set_text (GTK_LABEL (label), buffer);
 }
 
-
 void handleBinaryOperation () {
     char buffer[BUF_SIZE];
     const char *labelText;
@@ -276,15 +268,6 @@ void handleBinaryOperation () {
     gtk_label_set_text (GTK_LABEL (label), buffer);
 }
 
-
-/*
- * button_clicked
- *
- * widget - button pressed.
- * data - button label.
- *
- * Button was pressed, handle it.
-*/
 void button_clicked (GtkWidget *widget, gpointer data) {
     char ch = *((char *) data);
     char *str;
@@ -325,12 +308,6 @@ void button_clicked (GtkWidget *widget, gpointer data) {
     lastChar = ch;
 }
 
-/*
- * CreateButton
- *
- * Create a button, assign event handlers, and attach the button to the
- * table in the proper place.
-*/
 GtkWidget *createButton (GtkWidget *table, char *szLabel, int row, int column) {
     GtkWidget *button;
 
@@ -353,15 +330,6 @@ GtkWidget *createButton (GtkWidget *table, char *szLabel, int row, int column) {
     return (button);
 }
 
-
-
-/*
- * CreateCalculatorButtons
- *
- * Create the buttons on the calculator from the table we defined at the
- * beginning of this program.  The button pointers (handles) are stored
- * back in the table so they can be referenced later.
-*/
 void createCalculatorButtons (GtkWidget *table) {
     int nIndex;
 
@@ -377,13 +345,7 @@ void createCalculatorButtons (GtkWidget *table) {
     }
 }
 
-/*
- * main
- *
- * Program begins here
-*/
-int main (int argc, char *argv[])
-{
+int main (int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *table;
 
