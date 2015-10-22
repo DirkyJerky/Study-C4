@@ -7,8 +7,10 @@
 #define MAX_BUF 512
 
 GtkWidget *window;
-GtkSpinButton *spinButton;
-GtkDrawingArea *dArea;
+GtkWidget *dArea;
+GtkWidget *colorButton;
+GtkWidget *colorMenuItem;
+
 static cairo_surface_t *backMap = NULL;
 
 gdouble startX;
@@ -16,6 +18,16 @@ gdouble startY;
 
 void clear_surface(void);
 void doDrawing(gdouble, gdouble);
+
+void on_colorMenuItem_activate(GtkWidget *widget, gpointer user_data) {
+    g_debug("on_colorMenuItem_activate");
+    gtk_button_clicked(GTK_BUTTON(colorButton));
+}
+
+void on_colorMenuItem_activate_item(GtkWidget *widget, gpointer user_data) {
+    g_debug("on_colorMenuItem_activate_item");
+    gtk_button_clicked(GTK_BUTTON(colorButton));
+}
 
 gboolean on_drawingarea1_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data) {
     g_debug("on_drawingarea1_draw");
@@ -68,7 +80,7 @@ gboolean on_drawingarea1_button_release_event(GtkWidget *widget, GdkEvent *gEven
 
     doDrawing(event.x, event.y);
 
-    gtk_widget_queue_draw(GTK_WIDGET(dArea));
+    gtk_widget_queue_draw(dArea);
 
     return TRUE;
 }
@@ -109,19 +121,26 @@ void setupBuilder() {
     }
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window1"));
-    spinButton = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "spinbutton1"));
-    dArea = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "drawingarea1"));
+    dArea = GTK_WIDGET(gtk_builder_get_object(builder, "drawingarea1"));
+    BUILDER_GET(colorButton)
+    BUILDER_GET(colorMenuItem)
+
+    g_object_ref_sink(colorButton);
 
     gtk_builder_connect_signals(builder, NULL);
     g_object_unref(builder);
 }
 
+void helperRemoveChild(GtkWidget *widget, gpointer data) {
+    gtk_container_remove(GTK_CONTAINER(colorMenuItem), widget);
+}
+
 void setupObjects() {
-    //backMap = gdk_window_create_similar_image_surface(gtk_widget_get_window(GTK_WIDGET(dArea)), 
-    //        CAIRO_FORMAT_ARGB32,
-    //        gtk_widget_get_allocated_height(GTK_WIDGET(dArea)), 
-    //        gtk_widget_get_allocated_width(GTK_WIDGET(dArea)),
-    //        1);
+    gtk_container_foreach(GTK_CONTAINER(colorMenuItem), helperRemoveChild, NULL);
+
+    g_object_ref(colorButton);
+    gtk_container_add(GTK_CONTAINER(colorMenuItem), colorButton);
+    g_object_unref(colorButton);
 
 }
 
