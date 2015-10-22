@@ -12,4 +12,4 @@ int ___retb;
 
 #define CONSIG(X) gtk_builder_add_callback_symbol(builder , #X , G_CALLBACK(X))
 
-void gtk_builder_add_callback_symbol(GtkBuilder*, const char*, GCallback);
+#define BUILDER_GET(X) X = GTK_WIDGET(gtk_builder_get_object(builder, #X ));
