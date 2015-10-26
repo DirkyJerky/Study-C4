@@ -6,6 +6,7 @@
     <property name="visible">True</property>
     <property name="can_focus">True</property>
     <property name="receives_default">True</property>
+    <property name="use_alpha">True</property>
     <property name="color">#000000000000</property>
   </object>
   <object class="GtkWindow" id="window1">
@@ -90,48 +91,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="brushMenuItem">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Brush</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="brushMenu">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkRadioMenuItem" id="brushItem1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Solid</property>
-                        <property name="use_underline">True</property>
-                        <property name="active">True</property>
-                        <property name="draw_as_radio">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkRadioMenuItem" id="brushItem2">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Horiz Stripes</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_as_radio">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkRadioMenuItem" id="brushItem3">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Vert Stripes</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_as_radio">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
               <object class="GtkMenuItem" id="shapeMenuItem">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -142,10 +101,10 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkRadioMenuItem" id="shapetem1">
+                      <object class="GtkRadioMenuItem" id="shapeItem1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Rectangle</property>
+                        <property name="label" translatable="yes">Line</property>
                         <property name="use_underline">True</property>
                         <property name="active">True</property>
                         <property name="draw_as_radio">True</property>
@@ -155,18 +114,30 @@
                       <object class="GtkRadioMenuItem" id="shapeItem2">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Eclipse</property>
+                        <property name="label" translatable="yes">Rectangle</property>
                         <property name="use_underline">True</property>
                         <property name="draw_as_radio">True</property>
+                        <property name="group">shapeItem1</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkRadioMenuItem" id="shapeItem3">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Eclipse</property>
+                        <property name="use_underline">True</property>
+                        <property name="draw_as_radio">True</property>
+                        <property name="group">shapeItem1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkRadioMenuItem" id="shapeItem4">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Diamond</property>
                         <property name="use_underline">True</property>
                         <property name="draw_as_radio">True</property>
+                        <property name="group">shapeItem1</property>
                       </object>
                     </child>
                   </object>
@@ -200,6 +171,7 @@
                         <property name="label" translatable="yes">Dot Dot Dot</property>
                         <property name="use_underline">True</property>
                         <property name="draw_as_radio">True</property>
+                        <property name="group">lineItem1</property>
                       </object>
                     </child>
                     <child>
@@ -209,6 +181,7 @@
                         <property name="label" translatable="yes">Dash Dash Dash</property>
                         <property name="use_underline">True</property>
                         <property name="draw_as_radio">True</property>
+                        <property name="group">lineItem1</property>
                       </object>
                     </child>
                   </object>

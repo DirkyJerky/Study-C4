@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 
@@ -11,14 +12,26 @@ GtkWidget *dArea;
 GtkWidget *colorButton;
 GtkWidget *colorMenuItem;
 GtkWidget *widthItem1;
-GtkWidget *brushItem1;
+GtkWidget *widthItem2;
+GtkWidget *widthItem3;
+GtkWidget *widthItem4;
+GtkWidget *widthItem5;
 GtkWidget *shapeItem1;
+GtkWidget *shapeItem2;
+GtkWidget *shapeItem3;
+GtkWidget *shapeItem4;
 GtkWidget *lineItem1;
+GtkWidget *lineItem2;
+GtkWidget *lineItem3;
 
 static cairo_surface_t *backMap = NULL;
 
 gdouble startX;
 gdouble startY;
+
+typedef enum { LINE, RECTANGLE, ECLIPSE, DIAMOND } shape_t;
+
+shape_t selectedType = LINE;
 
 void clear_surface(void);
 void doDrawing(gdouble, gdouble);
@@ -103,7 +116,7 @@ void clear_surface() {
 void setForContext(cairo_t *cr, GtkRadioMenuItem *firstItem) {
     GSList *itemList = gtk_radio_menu_item_get_group(firstItem);
     GtkCheckMenuItem *tmpCheckItem = NULL;
-    char *selectedName = NULL;
+    const char *selectedName = NULL;
     while(itemList) {
         tmpCheckItem = itemList->data;
         itemList = itemList->next;
@@ -114,28 +127,113 @@ void setForContext(cairo_t *cr, GtkRadioMenuItem *firstItem) {
 
     if (selectedName == NULL) return;
 
-    // TODO SWITCH OVER ALL NAMES
+    g_debug("Name: %s", selectedName);
+    static int lineWidth;
+
+    // SWITCH OVER ALL NAMES
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem1))) {
+        cairo_set_line_width(cr, 1.0);
+        lineWidth = 1;
+    }
+
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem2))) {
+        cairo_set_line_width(cr, 8.0);
+        lineWidth = 8;
+    }
+
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem3))) {
+        cairo_set_line_width(cr, 16.0);
+        lineWidth = 16;
+    }
+
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem4))) {
+        cairo_set_line_width(cr, 24.0);
+        lineWidth = 24;
+    }
+
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem5))) {
+        cairo_set_line_width(cr, 32.0);
+        lineWidth = 32;
+    }
+
+
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM("lineItem1"))) {
+        cairo_set_dash(cr, NULL, 1, 0);
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+
+    } 
     
-}
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(lineItem2))) {
+        double dashes[2];
+        dashes[0] = 0.0;
+        dashes[1] = lineWidth * 2;
+        cairo_set_dash(cr, dashes, 2, 0);
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+
+    } 
+    
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(lineItem3))) {
+        double dashes[2];
+        dashes[0] = dashes[1] = lineWidth * 2;
+        cairo_set_dash(cr, dashes, 2, 0);
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+
+    } 
+    
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem1)))) {
+        selectedType = LINE;
+    } 
+    
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem2)))) {
+        selectedType = RECTANGLE;
+    } 
+    
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem3)))) {
+        selectedType = ECLIPSE;
+    } 
+    
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem4)))) {
+        selectedType = DIAMOND;
+    } 
+    
 
 cairo_t *setupContext() {
     cairo_t *cr = cairo_create(backMap);
+    setForContext(cr, GTK_RADIO_MENU_ITEM(widthItem1));
+    setForContext(cr, GTK_RADIO_MENU_ITEM(shapeItem1));
+    setForContext(cr, GTK_RADIO_MENU_ITEM(lineItem1));
 
-
+    GdkRGBA colorButtonColor;
+    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(colorButton), &colorButtonColor);
+    gdk_cairo_set_source_rgba(cr, &colorButtonColor);
 
     return cr;
 }
 
 void doDrawing(gdouble endX, gdouble endY) {
     cairo_t *cr = setupContext();
-    // gdk_cairo_set_source_rgba(cr, color);
-    // cairo_set_line_width(cr, (gdouble) gtk_spin_button_get_value_as_int(spinButton));
-    // cairo_move_to(cr, xS, yS);
-    // cairo_line_to(cr, xE, yE);
-    // cairo_stroke(cr);
-    cairo_destroy(cr);
 
-    // g_debug("Line: (%f, %f) -> (%f, %f) Color: %s", xS, yS, xE, yE, gdk_rgba_to_string(color));
+    switch(selectedType) {
+        case LINE:
+            cairo_move_to(cr, startX, startY);
+            cairo_line_to(cr, endX, endY);
+            cairo_stroke(cr);
+            break;
+
+        case RECTANGLE:
+            ;
+            break;
+            
+        case ECLIPSE:
+            ;
+            break;
+
+        case DIAMOND:
+            ;
+            break;
+    }
+
+    cairo_destroy(cr);
 
     //  cairo_surface_write_to_png(backMap, "image.png");
 }
@@ -156,9 +254,17 @@ void setupBuilder() {
     BUILDER_GET(colorMenuItem)
 
     BUILDER_GET(widthItem1)
-    BUILDER_GET(brushItem1)
+    BUILDER_GET(widthItem2)
+    BUILDER_GET(widthItem3)
+    BUILDER_GET(widthItem4)
+    BUILDER_GET(widthItem5)
     BUILDER_GET(shapeItem1)
+    BUILDER_GET(shapeItem2)
+    BUILDER_GET(shapeItem3)
+    BUILDER_GET(shapeItem4)
     BUILDER_GET(lineItem1)
+    BUILDER_GET(lineItem2)
+    BUILDER_GET(lineItem3)
 
     g_object_ref_sink(colorButton);
 
@@ -176,7 +282,6 @@ void setupObjects() {
     g_object_ref(colorButton);
     gtk_container_add(GTK_CONTAINER(colorMenuItem), colorButton);
     g_object_unref(colorButton);
-
 }
 
 int main(int argc, char *argv[]) {
