@@ -10,6 +10,10 @@ GtkWidget *window;
 GtkWidget *dArea;
 GtkWidget *colorButton;
 GtkWidget *colorMenuItem;
+GtkWidget *widthItem1;
+GtkWidget *brushItem1;
+GtkWidget *shapeItem1;
+GtkWidget *lineItem1;
 
 static cairo_surface_t *backMap = NULL;
 
@@ -24,10 +28,10 @@ void on_colorMenuItem_activate(GtkWidget *widget, gpointer user_data) {
     gtk_button_clicked(GTK_BUTTON(colorButton));
 }
 
-void on_colorMenuItem_activate_item(GtkWidget *widget, gpointer user_data) {
-    g_debug("on_colorMenuItem_activate_item");
-    gtk_button_clicked(GTK_BUTTON(colorButton));
-}
+//void on_colorMenuItem_activate_item(GtkWidget *widget, gpointer user_data) {
+//    g_debug("on_colorMenuItem_activate_item");
+//    gtk_button_clicked(GTK_BUTTON(colorButton));
+//}
 
 gboolean on_drawingarea1_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data) {
     g_debug("on_drawingarea1_draw");
@@ -96,8 +100,34 @@ void clear_surface() {
     cairo_destroy (cr);
 }
 
-void doDrawing(gdouble endX, gdouble endY) {
+void setForContext(cairo_t *cr, GtkRadioMenuItem *firstItem) {
+    GSList *itemList = gtk_radio_menu_item_get_group(firstItem);
+    GtkCheckMenuItem *tmpCheckItem = NULL;
+    char *selectedName = NULL;
+    while(itemList) {
+        tmpCheckItem = itemList->data;
+        itemList = itemList->next;
+        if(gtk_check_menu_item_get_active (tmpCheckItem)) {
+            selectedName = gtk_widget_get_name(GTK_WIDGET(tmpCheckItem));
+        }
+    }
+
+    if (selectedName == NULL) return;
+
+    // TODO SWITCH OVER ALL NAMES
+    
+}
+
+cairo_t *setupContext() {
     cairo_t *cr = cairo_create(backMap);
+
+
+
+    return cr;
+}
+
+void doDrawing(gdouble endX, gdouble endY) {
+    cairo_t *cr = setupContext();
     // gdk_cairo_set_source_rgba(cr, color);
     // cairo_set_line_width(cr, (gdouble) gtk_spin_button_get_value_as_int(spinButton));
     // cairo_move_to(cr, xS, yS);
@@ -124,6 +154,11 @@ void setupBuilder() {
     dArea = GTK_WIDGET(gtk_builder_get_object(builder, "drawingarea1"));
     BUILDER_GET(colorButton)
     BUILDER_GET(colorMenuItem)
+
+    BUILDER_GET(widthItem1)
+    BUILDER_GET(brushItem1)
+    BUILDER_GET(shapeItem1)
+    BUILDER_GET(lineItem1)
 
     g_object_ref_sink(colorButton);
 
