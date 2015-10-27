@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
@@ -156,11 +157,13 @@ void setForContext(cairo_t *cr, GtkRadioMenuItem *firstItem) {
         lineWidth = 32;
     }
 
+    g_debug("lineWidth = %d", lineWidth);
 
-    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM("lineItem1"))) {
-        cairo_set_dash(cr, NULL, 1, 0);
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(lineItem1))) {
+        cairo_set_dash(cr, NULL, 0, 0);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
 
+        g_debug("lineItem1 active and set");
     } 
     
     if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(lineItem2))) {
@@ -170,6 +173,7 @@ void setForContext(cairo_t *cr, GtkRadioMenuItem *firstItem) {
         cairo_set_dash(cr, dashes, 2, 0);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
+        g_debug("lineItem2 active and set");
     } 
     
     if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(lineItem3))) {
@@ -178,24 +182,33 @@ void setForContext(cairo_t *cr, GtkRadioMenuItem *firstItem) {
         cairo_set_dash(cr, dashes, 2, 0);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
 
+        g_debug("lineItem3 active and set");
     } 
     
-    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem1)))) {
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem1))) {
         selectedType = LINE;
+
+        g_debug("selectedType = LINE");
     } 
     
-    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem2)))) {
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem2))) {
         selectedType = RECTANGLE;
+
+        g_debug("selectedType = RECTANGLE");
     } 
     
-    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem3)))) {
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem3))) {
         selectedType = ECLIPSE;
+
+        g_debug("selectedType = ECLIPSE");
     } 
     
-    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem4)))) {
+    if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(shapeItem4))) {
         selectedType = DIAMOND;
+
+        g_debug("selectedType = DIAMOND");
     } 
-    
+}
 
 cairo_t *setupContext() {
     cairo_t *cr = cairo_create(backMap);
@@ -221,15 +234,32 @@ void doDrawing(gdouble endX, gdouble endY) {
             break;
 
         case RECTANGLE:
-            ;
+            cairo_move_to(cr, startX, startY);
+            cairo_line_to(cr, startX, endY);
+            cairo_line_to(cr, endX, endY);
+            cairo_line_to(cr, endX, startY);
+            cairo_close_path(cr);
+            cairo_fill(cr);
             break;
             
         case ECLIPSE:
-            ;
+            cairo_save(cr); // Save current trans matrix
+
+            cairo_translate(cr, (startX + endX)/2, (startY + endY)/2); // Set origin as center of ellipse
+            cairo_scale(cr, (startX - endX) / 2.0, (startY - endY) / 2.0); // Strech matrix so our circle will people an ellipse
+            cairo_arc(cr, 0.0, 0.0, 1.0, 0.0, 2 * M_PI); // Make the "circle"
+            cairo_fill(cr);
+
+            cairo_restore(cr); // Restore old matrix
             break;
 
         case DIAMOND:
-            ;
+            cairo_move_to(cr, (startX + endX)/2.0, startY); // Bottom
+            cairo_line_to(cr, startX, (startY + endY)/2.0); // Left
+            cairo_line_to(cr, (startX + endX)/2.0, endY); // Top
+            cairo_line_to(cr, endX, (startY + endY)/2.0); // Right
+            cairo_close_path(cr);
+            cairo_fill(cr);
             break;
     }
 
