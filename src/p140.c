@@ -24,6 +24,7 @@ GtkWidget *shapeItem4;
 GtkWidget *lineItem1;
 GtkWidget *lineItem2;
 GtkWidget *lineItem3;
+GtkWidget *statusBar;
 
 static cairo_surface_t *backMap = NULL;
 
@@ -33,6 +34,7 @@ gdouble startY;
 typedef enum { LINE, RECTANGLE, ECLIPSE, DIAMOND } shape_t;
 
 shape_t selectedType = LINE;
+guint contextID = 0;
 
 void clear_surface(void);
 void doDrawing(gdouble, gdouble);
@@ -135,26 +137,36 @@ void setForContext(cairo_t *cr, GtkRadioMenuItem *firstItem) {
     if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem1))) {
         cairo_set_line_width(cr, 1.0);
         lineWidth = 1;
+ 
+        gtk_statusbar_push(GTK_STATUSBAR(statusBar), contextID, "Width = 1");
     }
 
     if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem2))) {
         cairo_set_line_width(cr, 8.0);
         lineWidth = 8;
+ 
+        gtk_statusbar_push(GTK_STATUSBAR(statusBar), contextID, "Width = 8");
     }
 
     if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem3))) {
         cairo_set_line_width(cr, 16.0);
         lineWidth = 16;
+ 
+        gtk_statusbar_push(GTK_STATUSBAR(statusBar), contextID, "Width = 16");
     }
 
     if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem4))) {
         cairo_set_line_width(cr, 24.0);
         lineWidth = 24;
+ 
+        gtk_statusbar_push(GTK_STATUSBAR(statusBar), contextID, "Width = 24");
     }
 
     if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widthItem5))) {
         cairo_set_line_width(cr, 32.0);
         lineWidth = 32;
+ 
+        gtk_statusbar_push(GTK_STATUSBAR(statusBar), contextID, "Width = 32");
     }
 
     g_debug("lineWidth = %d", lineWidth);
@@ -296,6 +308,8 @@ void setupBuilder() {
     BUILDER_GET(lineItem2)
     BUILDER_GET(lineItem3)
 
+    BUILDER_GET(statusBar)
+
     g_object_ref_sink(colorButton);
 
     gtk_builder_connect_signals(builder, NULL);
@@ -312,6 +326,10 @@ void setupObjects() {
     g_object_ref(colorButton);
     gtk_container_add(GTK_CONTAINER(colorMenuItem), colorButton);
     g_object_unref(colorButton);
+
+    contextID = gtk_statusbar_get_context_id(GTK_STATUSBAR(statusBar), "show line width");
+
+    gtk_statusbar_push(GTK_STATUSBAR(statusBar), contextID, "Width = 1");
 }
 
 int main(int argc, char *argv[]) {
