@@ -27,12 +27,10 @@ void win_destroy (void)
 
 void next_button_clicked (GtkWidget *next_button)
 {
-  const gchar *text;
   GtkTextBuffer *buffer;
   GtkTextMark *last_pos;
   GtkTextIter iter;
 
-  text = gtk_entry_get_text (GTK_ENTRY (search_entry));
   buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   last_pos = gtk_text_buffer_get_mark (buffer, "last_pos");
   
