@@ -1,3 +1,7 @@
+// Source: 
+// https://github.com/steshaw/gtk-examples
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
