@@ -15,7 +15,7 @@ void show_about(void)
     gtk_window_set_default_size(GTK_WINDOW(window1), 300, 300);
   
 
-    label = gtk_label_new ("Text Editor\nGtk / C\nVersion 4.5\n\nCopyRight\nAll Rights Reserved\n");
+    label = gtk_label_new ("Text Editor\nGtk / C++");
     
     gtk_container_add (GTK_CONTAINER (window1), label); 
 
