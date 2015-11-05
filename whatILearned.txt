@@ -1,0 +1,54 @@
+What I learned
+
+Geoff Yoerger
+
+Dysgraphia is the reason I am doing this in a list instead of paragraphs
+
+
+- How to us libGTK and similar
+- How to use pkg-config to get compiler flags
+- How to use software licenses
+- How to use the Glade editor
+- How to use event driven application
+- How to make GUI applications
+- How to use the X Windowing system on MS Windows
+- How to use libCairo
+- How to use cairo to manually draw shapes
+- How to use enumerations and switch statements
+
+- How to find/use alternatives to outdated resources and tools
+
+- How to get a nice ~/.vimrc
+- How to be productive using vim
+
+- How to NOT use and IDE
+- How to start from the bottom so later you will know why and by happy to use an IDE
+- How to use git tags
+
+- How to confuse Mrs. Shullo with my methodologies
+
+- How to use Vim colorschemes
+
+- How to help coding allies with problems
+- How to explain not do problems to allies
+
+- How to be grateful that I am done with Pascel
+- How to wish that we learned Python instead of Pascel (erm *cough*)
+
+- How to use things and methods I am comfortable with instead of squeezing myself into things I am not
+
+- How to deal with burnout
+
+- How to complain about issues with Turbo C++ ---------------------- Please consider >>>>>>>>>>>>>> http://www.codeblocks.org/
+
+- How to modularize
+- How to delegate
+
+- How to use debuging facilities
+
+- How to be self-responsible
+
+- How to pace myself
+- How to be good enough
+
+
