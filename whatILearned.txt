@@ -22,7 +22,8 @@ Dysgraphia is the reason I am doing this in a list instead of paragraphs
 - How to be productive using vim
 
 - How to NOT use and IDE
-- How to start from the bottom so later you will know why and by happy to use an IDE
+- How to start from the bottom so later you will know why and 
+   + be happy to use an IDE
 - How to use git tags
 
 - How to confuse Mrs. Shullo with my methodologies
@@ -35,11 +36,13 @@ Dysgraphia is the reason I am doing this in a list instead of paragraphs
 - How to be grateful that I am done with Pascel
 - How to wish that we learned Python instead of Pascel (erm *cough*)
 
-- How to use things and methods I am comfortable with instead of squeezing myself into things I am not
+- How to use things and methods I am comfortable with instead of 
+   + squeezing myself into things I am not
 
 - How to deal with burnout
 
-- How to complain about issues with Turbo C++ ---------------------- Please consider >>>>>>>>>>>>>> http://www.codeblocks.org/
+- How to complain about issues with Turbo C++ 
+   + Please consider viewing >>> http://www.codeblocks.org/
 
 - How to modularize
 - How to delegate
